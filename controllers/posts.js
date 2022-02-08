@@ -99,5 +99,14 @@ module.exports = {
 			if(err) return res.status(500).json({err});
 			return res.json(product);
 		});
+    },
+
+    async remove(req, res){
+        const product = await req.product;
+        product.remove((err, product) => {
+            if(err) return res.json({err});
+            return res.json({message: 'post removed successfully'})
+        })
+        return res.json(products);
     }
 }
