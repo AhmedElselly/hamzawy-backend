@@ -3,6 +3,13 @@ const jwt = require('jsonwebtoken');
 
 
 module.exports = {
+    getUserById(req, res, next, id) {
+        User.findById(id).exec((err, user) => {
+            if(err) return res.json({err});
+            req.user = user;
+            next();
+        });
+    },
     async login(req, res){
         const {user, err} = await User.authenticate()(req.body.email, req.body.password);
 
@@ -22,5 +29,14 @@ module.exports = {
             if(err) return res.json({err});
             return res.json(user);
         });
+    },
+
+    async updateUser(req, res) {
+        const user = await req.user;
+        user.changePassword(user.password, req.body.password);
+        user.save((err, user) => {
+            if(err) return res.json({err});
+            return res.json(user);
+        })
     }
 }
