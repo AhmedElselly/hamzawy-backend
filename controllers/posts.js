@@ -9,12 +9,16 @@ module.exports = {
         });
     },
     async create(req, res){
-        const product = await Product(req.body);
-
+        // console.log(req.body)
+        const product = await new Product(req.body);
+        console.log(product)
+        product.subCategory = req.body.subCategory;
         product.save((err, product) => {
-            if(err) return res.json({err});
+            if(err) return res.status(400).json({err});
             return res.json(product);
         })
+        // return res.json(product);
+        
     },
 
     async postIndex(req, res){
