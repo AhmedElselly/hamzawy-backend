@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const {storage} = require('../cloudinary');
+const upload = multer({storage});
 
 const {
     home,
@@ -14,7 +17,7 @@ const {
     remove
 } = require('../controllers/posts');
 
-router.post('/create', create);
+router.post('/create', upload.array('image', 4), create);
 router.get('/byCategory/:name', byCategory);
 router.get('/byCategories', byCategories);
 router.get('/allProducts', allProducts);

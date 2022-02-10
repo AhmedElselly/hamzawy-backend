@@ -1,4 +1,13 @@
 const Product = require('../models/product');
+const {cloudinary} = require('../cloudinary');
+// const cloudinary = require('cloudinary').v2;
+
+// cloudinary.config({
+//     cloud_name: 'elselly',
+//     api_key: '549562546544323',
+//     api_secret: 'blNBwf7gQVPvt8LdgSN02BbSYnc',
+//     // secure: true
+// });
 
 module.exports = {
     getProductById(req, res, next, id){
@@ -9,16 +18,22 @@ module.exports = {
         });
     },
     async create(req, res){
-        // console.log(req.body)
+        console.log(req.body)
         const product = await new Product(req.body);
+        if(req.files){
+            for(let image in req.files){
+				console.log('here', req.files[image])
+                let result = await cloudinary.uploader.upload(req.files[image].path);
+				product.image.push(result.secure_url);
+            }            
+        }
         console.log(product)
+
         product.subCategory = req.body.subCategory;
         product.save((err, product) => {
             if(err) return res.status(400).json({err});
             return res.json(product);
-        })
-        // return res.json(product);
-        
+        })        
     },
 
     async postIndex(req, res){
