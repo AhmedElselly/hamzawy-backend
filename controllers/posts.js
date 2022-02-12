@@ -105,6 +105,23 @@ module.exports = {
 
     async postUpdate(req, res){
         const product = await req.product;
+        const {selected} = req.body;
+        let imagesArray = selected.split(',')
+
+        if(req.body.selected){
+            for(let i = 0; i < imagesArray.length; i++){
+                let index = product.image.indexOf(imagesArray[i]);
+                product.image.pull(product.image[index]);
+            }            
+        }
+
+        if(req.files){
+            for(let image in req.files){
+				console.log('here', req.files[image])
+                let result = await cloudinary.uploader.upload(req.files[image].path);
+				product.image.push(result.secure_url);
+            }
+        }
 
 		product.title = req.body.title;
 		product.subtitle = req.body.subtitle;
@@ -112,7 +129,6 @@ module.exports = {
 		product.price = req.body.price;
 		product.category = req.body.category;
 		product.subCategory = req.body.subCategory;
-		product.image = req.body.image;
 			
 		product.save((err, product) => {
 			if(err) return res.status(500).json({err});

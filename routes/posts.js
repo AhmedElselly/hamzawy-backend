@@ -22,7 +22,7 @@ router.get('/byCategory/:name', byCategory);
 router.get('/byCategories', byCategories);
 router.get('/allProducts', allProducts);
 router.get('/product/:postId', postId);
-router.put('/product/:postId/update', postUpdate);
+router.put('/product/:postId/update', upload.array('image', 4), postUpdate);
 router.delete('/product/:postId/remove', remove);
 
 router.get('/home', home);
