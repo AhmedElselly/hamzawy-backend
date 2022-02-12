@@ -142,6 +142,6 @@ module.exports = {
             if(err) return res.json({err});
             return res.json({message: 'post removed successfully'})
         })
-        return res.json(products);
+        // return res.json(products);
     }
 }
